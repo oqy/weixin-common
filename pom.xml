@@ -1,0 +1,127 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.minyisoft.webapp</groupId>
+	<artifactId>weixin-common</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<name>微信公众号公共程序包</name>
+
+	<properties>
+		<!-- 主要依赖库的版本定义 -->
+		<webapp-core.version>1.0.0-SNAPSHOT</webapp-core.version>
+		<javax-servlet.version>2.5</javax-servlet.version>
+		<xstream.version>1.4.5</xstream.version>
+		<junit.version>4.11</junit.version>
+
+		<!-- Plugin的属性定义 -->
+		<jdk.version>1.6</jdk.version>
+		<!-- 字符集定义 -->
+		<plugin.encoding>UTF-8</plugin.encoding>
+	</properties>
+	
+	<!-- 若采用Nexus私服，可将中心仓库配置信息移至私服，无需在pom配置以下信息 -->
+	<repositories>
+		<repository>
+			<id>central</id>
+			<name>Central Repository</name>
+			<url>http://repo.maven.apache.org/maven2</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+
+		<repository>
+			<id>sonatype-repository-public</id>
+			<name>Sonatype Repository Public</name>
+			<url>http://repository.sonatype.org/content/groups/public/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.minyisoft.webapp</groupId>
+			<artifactId>webapp-core</artifactId>
+			<version>${webapp-core.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>${javax-servlet.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>com.thoughtworks.xstream</groupId>
+		    <artifactId>xstream</artifactId>
+		    <version>${xstream.version}</version>
+		</dependency>
+		<!-- test dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.0</version>
+					<configuration>
+						<source>${jdk.version}</source>
+						<target>${jdk.version}</target>
+						<encoding>${plugin.encoding}</encoding>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.6</version>
+					<configuration>
+						<encoding>${plugin.encoding}</encoding>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.4.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.9.1</version>
+					<configuration>
+						<charset>${plugin.encoding}</charset>
+						<encoding>${plugin.encoding}</encoding>
+						<docencoding>${plugin.encoding}</docencoding>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<scm>
+		<url>svn://192.168.0.253/webapp/weixin-common/trunk</url>
+		<connection>scm:svn:svn://192.168.0.253/webapp/weixin-common/trunk</connection>
+		<developerConnection>scm:svn:svn://192.168.0.253/webapp/weixin-common/trunk</developerConnection>
+	</scm>
+
+	<distributionManagement>
+		<repository>
+			<id>releases</id>
+			<name>Nexus Release Repository</name>
+			<url>http://192.168.0.253:8081/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<name>Nexus Snapshot Repository</name>
+			<url>http://192.168.0.253:8081/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+</project>

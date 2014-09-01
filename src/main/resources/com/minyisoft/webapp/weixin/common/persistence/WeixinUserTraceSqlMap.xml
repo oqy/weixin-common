@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.minyisoft.webapp.weixin.common.persistence.WeixinUserTraceDao">
+  <select id="getTouchableWeixinOpenIds" resultType="String">
+	select distinct fweixinopenid from t_oprt_weixinusertrace where ftracetime > (sysdate - 2)
+  </select>
+
+  <insert id="logTrace" parameterType="com.minyisoft.webapp.weixin.common.dto.WeixinUserTraceInfo">
+    insert into t_oprt_weixinusertrace(fweixinopenid,ftracetime,fmessagetype,feventtype,fdescription,fmessage,fid)
+	values(#{weixinOpenId},#{traceTime},#{messageType},#{eventType},#{description},#{messageString},sys_guid())
+  </insert>
+</mapper>
