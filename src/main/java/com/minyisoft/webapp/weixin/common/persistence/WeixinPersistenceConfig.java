@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * @author qingyong_ou 注册weixinUserTraceDao
  */
 @Configuration
-public class PersistenceConfig {
+public class WeixinPersistenceConfig {
 	@Autowired
 	private SqlSessionFactory sqlSessionFactory;
 
@@ -18,5 +18,11 @@ public class PersistenceConfig {
 	public WeixinUserTraceDao weixinUserTraceDao() throws Exception {
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory);
 		return sessionTemplate.getMapper(WeixinUserTraceDao.class);
+	}
+
+	@Bean
+	public WeixinUserDao weixinUserDao() throws Exception {
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory);
+		return sessionTemplate.getMapper(WeixinUserDao.class);
 	}
 }

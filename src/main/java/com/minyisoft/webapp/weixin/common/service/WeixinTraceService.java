@@ -5,12 +5,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.common.base.Optional;
+import com.minyisoft.webapp.weixin.common.dto.WeixinUserInfo;
 import com.minyisoft.webapp.weixin.common.dto.WeixinUserTraceInfo;
 import com.minyisoft.webapp.weixin.common.dto.receive.EventMessage;
 import com.minyisoft.webapp.weixin.common.dto.receive.EventType;
 import com.minyisoft.webapp.weixin.common.dto.receive.MenuMessage;
 import com.minyisoft.webapp.weixin.common.dto.receive.Message;
 import com.minyisoft.webapp.weixin.common.dto.receive.TextMessage;
+import com.minyisoft.webapp.weixin.common.persistence.WeixinUserDao;
 import com.minyisoft.webapp.weixin.common.persistence.WeixinUserTraceDao;
 
 /**
@@ -19,7 +22,11 @@ import com.minyisoft.webapp.weixin.common.persistence.WeixinUserTraceDao;
 @Service
 public class WeixinTraceService {
 	@Autowired
+	private WeixinCommonService weixinCommonService;
+	@Autowired
 	private WeixinUserTraceDao weixinUserTraceDao;
+	@Autowired
+	private WeixinUserDao weixinUserDao;
 
 	/**
 	 * 更新指定微信用户与公众号互动的最后时间，以及用户的操作轨迹
@@ -41,6 +48,14 @@ public class WeixinTraceService {
 		}
 		trace.setMessageString(messageString);
 		weixinUserTraceDao.logTrace(trace);
+
+		// 保存微信用户基本信息
+		if (weixinUserDao.getWeixinUser(trace.getWeixinOpenId()) == null) {
+			Optional<WeixinUserInfo> user = weixinCommonService.queryWeixinUserInfo(trace.getWeixinOpenId());
+			if (user.isPresent()) {
+				weixinUserDao.insertWeixinUser(user.get());
+			}
+		}
 	}
 
 	/**

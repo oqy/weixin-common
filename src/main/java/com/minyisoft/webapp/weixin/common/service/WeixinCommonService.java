@@ -3,6 +3,7 @@ package com.minyisoft.webapp.weixin.common.service;
 import java.text.MessageFormat;
 import java.util.Map;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ import com.minyisoft.webapp.core.security.utils.EncodeUtils;
 import com.minyisoft.webapp.core.utils.mapper.json.JsonMapper;
 import com.minyisoft.webapp.core.utils.redis.JedisTemplate;
 import com.minyisoft.webapp.core.utils.redis.JedisTemplate.JedisActionNoResult;
+import com.minyisoft.webapp.weixin.common.dto.WeixinUserInfo;
 
 @Service
 public class WeixinCommonService {
@@ -39,6 +41,8 @@ public class WeixinCommonService {
 	private RestTemplate restTemplate;
 	@Autowired
 	private JedisTemplate jedisTemplate;
+	@Value("${weixin.get_user_info_url}")
+	private String getUserInfoUrl;
 
 	private static final String WEIXIN_ACCESS_TOKEN_KEY = "weixin:access_token";// 微信access_token在redis的键值
 
@@ -123,7 +127,7 @@ public class WeixinCommonService {
 		}
 		return ticket;
 	}
-	
+
 	public String genWeixinTicket(final String weixinOpenId) {
 		return genWeixinTicket(weixinOpenId, 0);
 	}
@@ -143,5 +147,36 @@ public class WeixinCommonService {
 			}
 		}
 		return Optional.absent();
+	}
+
+	/**
+	 * 查询指定openId用户基本信息
+	 * 
+	 * @param weixinOpenId
+	 * @return
+	 */
+	public Optional<WeixinUserInfo> queryWeixinUserInfo(String weixinOpenId) {
+		ResponseEntity<String> result = restTemplate.getForEntity(
+				MessageFormat.format(getUserInfoUrl, getAccessToken(), weixinOpenId), String.class);
+		Map<String, Object> resultMap = JsonMapper.NON_EMPTY_MAPPER.fromJson(
+				result.getBody(),
+				JsonMapper.NON_EMPTY_MAPPER.getMapper().getTypeFactory()
+						.constructMapType(Map.class, String.class, Object.class));
+		if (resultMap.containsKey("errcode")) {
+			logger.error(MessageFormat.format("获取微信用户基本信息失败，错误码：{0}，错误提示：{1}", resultMap.get("errcode"),
+					resultMap.get("errmsg")));
+			return Optional.absent();
+		} else if (((Integer) resultMap.get("subscribe")) == 0) {
+			logger.error("微信用户[" + weixinOpenId + "]尚未关注公众号，无法获取用户基本信息");
+			return Optional.absent();
+		} else {
+			WeixinUserInfo user = new WeixinUserInfo();
+			try {
+				BeanUtils.populate(user, resultMap);
+				return Optional.of(user);
+			} catch (Exception e) {
+				return Optional.absent();
+			}
+		}
 	}
 }
