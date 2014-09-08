@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.fusung.webapp.weixin.common.persistence.WeixinUserTraceDao">
+<mapper namespace="com.minyisoft.webapp.weixin.common.persistence.WeixinUserTraceDao">
   <select id="getWeixinOpenIds" resultType="String">
 	select distinct fweixinopenid from t_weixin_weixinusertrace
   </select>
@@ -11,35 +11,8 @@
 	select distinct fweixinopenid from t_weixin_weixinusertrace where ftracetime > (sysdate - 2)
   </select>
 
-  <insert id="logTrace" parameterType="com.fusung.webapp.weixin.common.dto.WeixinUserTraceInfo">
+  <insert id="logTrace" parameterType="com.minyisoft.webapp.weixin.common.model.WeixinUserTraceInfo">
     insert into t_weixin_weixinusertrace(fweixinopenid,ftracetime,fmessagetype,feventtype,fdescription,fmessage,fid)
 	values(#{weixinOpenId},#{traceTime},#{messageType},#{eventType},#{description},#{messageString},sys_guid())
   </insert>
-  
-  <select id="getWeixinUser" parameterType="String" resultType="java.util.Map">
-    select
-    			fsubscribe,
-    			fopenid,
-            	fnickname ,
-            	fsex ,
-            	flanguage ,
-            	fcity ,
-            	fprovince ,
-            	fcountry ,
-            	fheadimgurl ,
-            	fsubscribetime,
-            	funionid 
-          from t_weixin_weixinuser
-    where fopenid = #{id}
-  </select>
-  
-  <insert id="insertWeixinUser" parameterType="java.util.Map">
-    insert into t_weixin_weixinuser (fsubscribe,fopenid,fnickname,fsex,flanguage,fcity,fprovince,fcountry,fheadimgurl,fsubscribetime,funionid) 
-    values(#{subscribe},#{openid},#{nickname},#{sex},#{language},#{city},#{province},#{country},#{headimgurl},#{subscribe_time},#{unionid})
-  </insert>
-
-  <update id="updateWeixinUser" parameterType="java.util.Map">
-    update t_weixin_weixinuser set fsubscribe=#{subscribe},fnickname=#{nickname},fsex=#{sex},flanguage=#{language},fcity=#{city},fprovince=#{province},
-    fcountry=#{country},fheadimgurl=#{headimgurl},fsubscribetime=#{subscribe_time},funionid=#{unionid} where fopenid=#{openid}
-  </update>
 </mapper>

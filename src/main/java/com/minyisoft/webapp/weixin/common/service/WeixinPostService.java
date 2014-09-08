@@ -14,11 +14,11 @@ import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
 import com.minyisoft.webapp.core.utils.mapper.json.JsonMapper;
-import com.minyisoft.webapp.weixin.common.dto.send.Article;
-import com.minyisoft.webapp.weixin.common.dto.send.NewsMessage;
-import com.minyisoft.webapp.weixin.common.dto.send.TemplateMessage;
-import com.minyisoft.webapp.weixin.common.dto.send.TemplateMessageData;
-import com.minyisoft.webapp.weixin.common.dto.send.TextMessage;
+import com.minyisoft.webapp.weixin.common.model.dto.send.Article;
+import com.minyisoft.webapp.weixin.common.model.dto.send.NewsMessage;
+import com.minyisoft.webapp.weixin.common.model.dto.send.TemplateMessage;
+import com.minyisoft.webapp.weixin.common.model.dto.send.TemplateMessageData;
+import com.minyisoft.webapp.weixin.common.model.dto.send.TextMessage;
 
 /**
  * @author qingyong_ou 微信消息发送服务

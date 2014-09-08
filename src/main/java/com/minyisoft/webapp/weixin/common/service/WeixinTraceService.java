@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.common.base.Optional;
-import com.minyisoft.webapp.weixin.common.dto.WeixinUserInfo;
-import com.minyisoft.webapp.weixin.common.dto.WeixinUserTraceInfo;
-import com.minyisoft.webapp.weixin.common.dto.receive.EventMessage;
-import com.minyisoft.webapp.weixin.common.dto.receive.EventType;
-import com.minyisoft.webapp.weixin.common.dto.receive.MenuMessage;
-import com.minyisoft.webapp.weixin.common.dto.receive.Message;
-import com.minyisoft.webapp.weixin.common.dto.receive.TextMessage;
+import com.minyisoft.webapp.weixin.common.model.WeixinUserInfo;
+import com.minyisoft.webapp.weixin.common.model.WeixinUserTraceInfo;
+import com.minyisoft.webapp.weixin.common.model.dto.receive.EventMessage;
+import com.minyisoft.webapp.weixin.common.model.dto.receive.EventType;
+import com.minyisoft.webapp.weixin.common.model.dto.receive.MenuMessage;
+import com.minyisoft.webapp.weixin.common.model.dto.receive.Message;
+import com.minyisoft.webapp.weixin.common.model.dto.receive.TextMessage;
 import com.minyisoft.webapp.weixin.common.persistence.WeixinUserDao;
 import com.minyisoft.webapp.weixin.common.persistence.WeixinUserTraceDao;
 

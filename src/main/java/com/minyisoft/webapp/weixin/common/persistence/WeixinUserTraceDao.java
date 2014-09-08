@@ -2,7 +2,7 @@ package com.minyisoft.webapp.weixin.common.persistence;
 
 import java.util.List;
 
-import com.minyisoft.webapp.weixin.common.dto.WeixinUserTraceInfo;
+import com.minyisoft.webapp.weixin.common.model.WeixinUserTraceInfo;
 
 /**
  * @author qingyong_ou 微信用户操作跟踪dao

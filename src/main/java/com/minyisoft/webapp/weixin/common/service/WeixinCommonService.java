@@ -14,16 +14,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
-import redis.clients.jedis.Jedis;
-
 import com.google.common.base.Optional;
 import com.minyisoft.webapp.core.exception.ServiceException;
 import com.minyisoft.webapp.core.security.utils.DigestUtils;
 import com.minyisoft.webapp.core.security.utils.EncodeUtils;
 import com.minyisoft.webapp.core.utils.mapper.json.JsonMapper;
-import com.minyisoft.webapp.core.utils.redis.JedisTemplate;
-import com.minyisoft.webapp.core.utils.redis.JedisTemplate.JedisActionNoResult;
-import com.minyisoft.webapp.weixin.common.dto.WeixinUserInfo;
+import com.minyisoft.webapp.weixin.common.model.WeixinUserInfo;
 
 @Service
 public class WeixinCommonService {
@@ -37,12 +33,13 @@ public class WeixinCommonService {
 	private String accessTokenUrl;
 	@Value("${weixin.oauth2.access_token_url}")
 	private String oauth2AccessTokenUrl;
+	@Value("${weixin.get_user_info_url}")
+	private String getUserInfoUrl;
+
 	@Autowired
 	private RestTemplate restTemplate;
 	@Autowired
-	private JedisTemplate jedisTemplate;
-	@Value("${weixin.get_user_info_url}")
-	private String getUserInfoUrl;
+	private WeixinCacheService<String> weixinCacheService;
 
 	private static final String WEIXIN_ACCESS_TOKEN_KEY = "weixin:access_token";// 微信access_token在redis的键值
 
@@ -53,14 +50,14 @@ public class WeixinCommonService {
 	 */
 	public String getAccessToken() {
 		String accessToken = null;
-		if (StringUtils.isNotBlank(accessToken = jedisTemplate.get(WEIXIN_ACCESS_TOKEN_KEY))) {
+		if (StringUtils.isNotBlank(accessToken = weixinCacheService.getValue(WEIXIN_ACCESS_TOKEN_KEY))) {
 			return accessToken;
 		}
 		Map<String, String> resultMap = _queryFromWeixinServer(MessageFormat.format(accessTokenUrl, weixinAppID,
 				weixinAppSecret));
 		if (resultMap.containsKey("access_token")) {
-			// 在redis中缓存access_token，过期时间比微信官方时间短1分钟
-			jedisTemplate.setex(WEIXIN_ACCESS_TOKEN_KEY, resultMap.get("access_token"),
+			// 缓存access_token，过期时间比微信官方时间短1分钟
+			weixinCacheService.setValue(WEIXIN_ACCESS_TOKEN_KEY, resultMap.get("access_token"),
 					Integer.parseInt(resultMap.get("expires_in")) - 60);
 			return resultMap.get("access_token");
 		} else {
@@ -103,7 +100,7 @@ public class WeixinCommonService {
 				.getTypeFactory().constructMapType(Map.class, String.class, String.class));
 	}
 
-	private static final String WEIXIN_TICKET_KEY_PREFIX = "weixin:ticket:";// 微信ticket在redis的键值前缀
+	private static final String WEIXIN_TICKET_KEY_PREFIX = "weixin:ticket:";// 微信ticket缓存的键值前缀
 
 	/**
 	 * 根据微信用户openId生成系统票据，票据用于附加到超链接中，方便绑定了账号的微信用户免手工登录系统，同时票据有失效时间，
@@ -115,16 +112,7 @@ public class WeixinCommonService {
 	public String genWeixinTicket(final String weixinOpenId, final int ticketExpiredSeconds) {
 		Assert.hasLength(weixinOpenId, "待生成ticket的目标微信号不能为空");
 		final String ticket = EncodeUtils.encodeHex(DigestUtils.generateSalt(6));
-		jedisTemplate.set(WEIXIN_TICKET_KEY_PREFIX + ticket, weixinOpenId);
-		// 若设置的失效秒数大于0，设置ticket失效秒数
-		if (ticketExpiredSeconds > 0) {
-			jedisTemplate.execute(new JedisActionNoResult() {
-				@Override
-				public void action(Jedis jedis) throws Exception {
-					jedis.expire(WEIXIN_TICKET_KEY_PREFIX + ticket, ticketExpiredSeconds);
-				}
-			});
-		}
+		weixinCacheService.setValue(WEIXIN_TICKET_KEY_PREFIX + ticket, weixinOpenId, ticketExpiredSeconds);
 		return ticket;
 	}
 
@@ -140,9 +128,9 @@ public class WeixinCommonService {
 	 */
 	public Optional<String> getOpenIdByTicket(String weixinTicket) {
 		if (StringUtils.isNotBlank(weixinTicket)) {
-			String weixinOpenId = jedisTemplate.get(WEIXIN_TICKET_KEY_PREFIX + weixinTicket);
+			String weixinOpenId = weixinCacheService.getValue(WEIXIN_TICKET_KEY_PREFIX + weixinTicket);
 			if (StringUtils.isNotBlank(weixinOpenId)) {
-				jedisTemplate.del(WEIXIN_TICKET_KEY_PREFIX + weixinTicket);
+				weixinCacheService.delValue(WEIXIN_TICKET_KEY_PREFIX + weixinTicket);
 				return Optional.of(weixinOpenId);
 			}
 		}

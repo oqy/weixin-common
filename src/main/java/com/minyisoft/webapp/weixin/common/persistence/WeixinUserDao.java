@@ -1,6 +1,6 @@
 package com.minyisoft.webapp.weixin.common.persistence;
 
-import com.minyisoft.webapp.weixin.common.dto.WeixinUserInfo;
+import com.minyisoft.webapp.weixin.common.model.WeixinUserInfo;
 
 /**
  * @author qingyong_ou 微信用户操作跟踪dao
