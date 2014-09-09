@@ -20,7 +20,8 @@ public class TemplateMessage {
 	// 消息模板id
 	@JsonProperty("template_id")
 	private String templateId;
-	// private String url;
+	// 超链接
+	private String url;
 	// 标题颜色
 	@JsonProperty("topcolor")
 	private String topColor = "#FF0000";

@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,10 +90,12 @@ public class WeixinPostService {
 	 * 
 	 * @param weixinOpenId
 	 * @param templateId
+	 * @param url
 	 * @param data
 	 * @return
 	 */
-	public boolean postTemplateMessage(String weixinOpenId, String templateId, Map<String, TemplateMessageData> data) {
+	public boolean postTemplateMessage(String weixinOpenId, String templateId, String url,
+			Map<String, TemplateMessageData> data) {
 		Assert.hasLength(weixinOpenId, "待发消息目标微信号不能为空");
 		Assert.hasLength(templateId, "待发模板消息ID不能为空");
 		Assert.isTrue(data != null && !data.isEmpty(), "待发消息不能为空");
@@ -101,6 +104,7 @@ public class WeixinPostService {
 		message.setData(data);
 		message.setToUser(weixinOpenId);
 		message.setTemplateId(templateId);
+		message.setUrl(StringUtils.isBlank(url) ? "" : url);
 		Map<String, String> resultMap = _postToWeixinServer(
 				MessageFormat.format(sendTemplateMessageUrl, weixinCommonService.getAccessToken()),
 				JsonMapper.NON_EMPTY_MAPPER.toJson(message));
