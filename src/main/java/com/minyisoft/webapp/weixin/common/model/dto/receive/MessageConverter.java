@@ -102,6 +102,19 @@ public class MessageConverter implements Converter {
 					break;
 				case TEMPLATESENDJOBFINISH:
 					message = new TemplateSendJobFinishMessage();
+					break;
+				case SCANCODE_PUSH:
+				case SCANCODE_WAITMSG:
+					message = new ScanCodeMenuMessage();
+					break;
+				case PIC_PHOTO_OR_ALBUM:
+				case PIC_SYSPHOTO:
+				case PIC_WEIXIN:
+					message = new PicMenuMessage();
+					break;
+				case LOCATION_SELECT:
+					message = new LocationMenuMessage();
+					break;
 				default:
 					break;
 				}
