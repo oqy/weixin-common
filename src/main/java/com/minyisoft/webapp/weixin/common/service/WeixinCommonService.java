@@ -68,6 +68,13 @@ public class WeixinCommonService {
 	}
 
 	/**
+	 * 清空微信access_token缓存
+	 */
+	public void clearAccessTokenCache() {
+		weixinCacheService.delValue(WEIXIN_ACCESS_TOKEN_KEY);
+	}
+
+	/**
 	 * 在网页授权的情况下，通过code获取微信用户对应本服务号的openId
 	 * 
 	 * @param weixinOAuthCode
