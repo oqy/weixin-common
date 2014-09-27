@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
+import com.google.common.collect.Lists;
 import com.minyisoft.webapp.core.utils.mapper.json.JsonMapper;
 import com.minyisoft.webapp.weixin.common.model.dto.send.Article;
 import com.minyisoft.webapp.weixin.common.model.dto.send.NewsMessage;
@@ -62,7 +63,21 @@ public class WeixinPostService {
 	}
 
 	/**
-	 * 发送图文消息
+	 * 发送单条图文消息
+	 * 
+	 * @param weixinOpenId
+	 * @param article
+	 * @return
+	 */
+	public boolean postNewsMessage(String weixinOpenId, Article article) {
+		Assert.notNull(article, "待发消息不能为空");
+		List<Article> articles = Lists.newArrayList();
+		articles.add(article);
+		return postNewsMessage(weixinOpenId, articles);
+	}
+
+	/**
+	 * 发送多条图文消息
 	 * 
 	 * @param weixinOpenId
 	 * @param articles

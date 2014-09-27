@@ -25,10 +25,12 @@ public class ExpirableCacheItem<T> {
 
 	public ExpirableCacheItem(T value, int expiredSeconds) {
 		this.value = value;
-		this.expireDate = DateTime.now().plusSeconds(expiredSeconds).toDate();
+		if (expiredSeconds > 0) {
+			this.expireDate = DateTime.now().plusSeconds(expiredSeconds).toDate();
+		}
 	}
 
 	public boolean isValid() {
-		return new Date().before(expireDate);
+		return expireDate != null ? new Date().before(expireDate) : true;
 	}
 }

@@ -1,5 +1,6 @@
 package com.minyisoft.webapp.weixin.common.service;
 
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import com.minyisoft.webapp.weixin.common.model.ExpirableCacheItem;
  * @param <T>
  */
 @Service
-public class WeixinCacheService<T> implements InitializingBean {
+public class WeixinCacheService<T> implements InitializingBean, DisposableBean {
 	@Autowired(required = false)
 	private JedisTemplate jedisTemplate;
 	private Cache<String, ExpirableCacheItem<T>> cache = null;
@@ -62,6 +63,13 @@ public class WeixinCacheService<T> implements InitializingBean {
 			jedisTemplate.del(key);
 		} else {
 			cache.invalidate(key);
+		}
+	}
+
+	@Override
+	public void destroy() throws Exception {
+		if (cache != null) {
+			cache.cleanUp();
 		}
 	}
 }
