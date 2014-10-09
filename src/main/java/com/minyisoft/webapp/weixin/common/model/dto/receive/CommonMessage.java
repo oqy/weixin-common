@@ -17,10 +17,10 @@ public abstract class CommonMessage extends Message {
 	private long msgId;
 
 	@Override
-	protected void fillProperty(Map<String, String> properties) {
+	protected void fillProperty(Map<String, Object> properties) {
 		super.fillProperty(properties);
 		if (properties.containsKey("msgId")) {
-			setMsgId(Long.parseLong(properties.get("msgId")));
+			setMsgId(Long.parseLong((String)properties.get("msgId")));
 		}
 	}
 }

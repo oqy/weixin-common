@@ -18,17 +18,17 @@ public class LocationMessage extends CommonMessage {
 	private String label;
 
 	@Override
-	protected void fillProperty(Map<String, String> properties) {
+	protected void fillProperty(Map<String, Object> properties) {
 		super.fillProperty(properties);
 		if (properties.containsKey("location_X")) {
-			setLocation_X(new BigDecimal(properties.get("location_X")));
+			setLocation_X(new BigDecimal((String)properties.get("location_X")));
 		}
 		if (properties.containsKey("location_Y")) {
-			setLocation_Y(new BigDecimal(properties.get("location_Y")));
+			setLocation_Y(new BigDecimal((String)properties.get("location_Y")));
 		}
 		if (properties.containsKey("scale")) {
-			setScale(new BigDecimal(properties.get("scale")));
+			setScale(new BigDecimal((String)properties.get("scale")));
 		}
-		setLabel(properties.get("label"));
+		setLabel((String)properties.get("label"));
 	}
 }

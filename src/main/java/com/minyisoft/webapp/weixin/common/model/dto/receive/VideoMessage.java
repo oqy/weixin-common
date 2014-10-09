@@ -13,11 +13,11 @@ import lombok.Setter;
 public class VideoMessage extends CommonMessage {
 	private String mediaId;
 	private String thumbMediaId;
-	
+
 	@Override
-	protected void fillProperty(Map<String, String> properties) {
+	protected void fillProperty(Map<String, Object> properties) {
 		super.fillProperty(properties);
-		setMediaId(properties.get("mediaId"));
-		setThumbMediaId(properties.get("thumbMediaId"));
+		setMediaId((String) properties.get("mediaId"));
+		setThumbMediaId((String) properties.get("thumbMediaId"));
 	}
 }

@@ -31,12 +31,12 @@ public abstract class Message {
 	 */
 	private MessageType msgType;
 
-	protected void fillProperty(Map<String, String> properties) {
+	protected void fillProperty(Map<String, Object> properties) {
 		Assert.isTrue(properties != null && !properties.isEmpty());
-		setToUserName(properties.get("toUserName"));
-		setFromUserName(properties.get("fromUserName"));
+		setToUserName((String)properties.get("toUserName"));
+		setFromUserName((String)properties.get("fromUserName"));
 		if (properties.containsKey("createTime")) {
-			setCreateTime(new Date(Long.parseLong(properties.get("createTime")) * 1000L));
+			setCreateTime(new Date(Long.parseLong((String)properties.get("createTime")) * 1000L));
 		}
 	}
 }

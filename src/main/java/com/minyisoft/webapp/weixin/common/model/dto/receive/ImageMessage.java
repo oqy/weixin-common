@@ -15,9 +15,9 @@ public class ImageMessage extends CommonMessage {
 	private String mediaId;
 	
 	@Override
-	protected void fillProperty(Map<String, String> properties) {
+	protected void fillProperty(Map<String, Object> properties) {
 		super.fillProperty(properties);
-		setPicUrl(properties.get("picUrl"));
-		setMediaId(properties.get("mediaId"));
+		setPicUrl((String)properties.get("picUrl"));
+		setMediaId((String)properties.get("mediaId"));
 	}
 }

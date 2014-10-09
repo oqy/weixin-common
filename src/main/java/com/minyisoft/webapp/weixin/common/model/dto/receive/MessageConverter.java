@@ -7,6 +7,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Maps;
+import com.minyisoft.webapp.weixin.common.model.dto.receive.messagenode.ScanCodeInfo;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -47,13 +48,17 @@ public class MessageConverter implements Converter {
 
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-		Map<String, String> map = Maps.newHashMap();
+		Map<String, Object> map = Maps.newHashMap();
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();
-			map.put(StringUtils.uncapitalize(reader.getNodeName()), reader.getValue());
+			if (reader.getNodeName().equalsIgnoreCase("ScanCodeInfo")) {
+				map.put("scanCodeInfo", context.convertAnother(new ScanCodeMenuMessage(), ScanCodeInfo.class));
+			} else {
+				map.put(StringUtils.uncapitalize(reader.getNodeName()), reader.getValue());
+			}
 			reader.moveUp();
 		}
-		MessageType messageType = MessageType.valueOf(StringUtils.upperCase(map.get("msgType")));
+		MessageType messageType = MessageType.valueOf(StringUtils.upperCase((String)map.get("msgType")));
 		Message message = null;
 		switch (messageType) {
 		case TEXT:
@@ -80,8 +85,8 @@ public class MessageConverter implements Converter {
 			break;
 		case EVENT:
 			EventType eventType = null;
-			try{
-				eventType = EventType.valueOf(StringUtils.upperCase(map.get("event")));
+			try {
+				eventType = EventType.valueOf(StringUtils.upperCase((String)map.get("event")));
 			} catch (Exception e) {
 			}
 			if (eventType != null) {

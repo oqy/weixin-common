@@ -12,10 +12,10 @@ import lombok.Setter;
 @Setter
 public class MenuMessage extends EventMessage {
 	private String eventKey;
-	
+
 	@Override
-	protected void fillProperty(Map<String, String> properties) {
+	protected void fillProperty(Map<String, Object> properties) {
 		super.fillProperty(properties);
-		setEventKey(properties.get("eventKey"));
+		setEventKey((String) properties.get("eventKey"));
 	}
 }

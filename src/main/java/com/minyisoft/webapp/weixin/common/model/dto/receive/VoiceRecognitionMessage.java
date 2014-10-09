@@ -12,10 +12,10 @@ import lombok.Setter;
 @Setter
 public class VoiceRecognitionMessage extends VoiceMessage {
 	private String recognition;
-	
+
 	@Override
-	protected void fillProperty(Map<String, String> properties) {
+	protected void fillProperty(Map<String, Object> properties) {
 		super.fillProperty(properties);
-		setRecognition(properties.get("recognition"));
+		setRecognition((String) properties.get("recognition"));
 	}
 }

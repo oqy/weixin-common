@@ -12,10 +12,10 @@ import lombok.Setter;
 @Setter
 public class TemplateSendJobFinishMessage extends EventMessage {
 	private String status;
-	
+
 	@Override
-	protected void fillProperty(Map<String, String> properties) {
+	protected void fillProperty(Map<String, Object> properties) {
 		super.fillProperty(properties);
-		setStatus(properties.get("status"));
+		setStatus((String) properties.get("status"));
 	}
 }

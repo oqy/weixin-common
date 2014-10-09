@@ -17,16 +17,16 @@ public class UploadLocationMessage extends EventMessage {
 	private BigDecimal precision;
 
 	@Override
-	protected void fillProperty(Map<String, String> properties) {
+	protected void fillProperty(Map<String, Object> properties) {
 		super.fillProperty(properties);
 		if (properties.containsKey("latitude")) {
-			setLatitude(new BigDecimal(properties.get("latitude")));
+			setLatitude(new BigDecimal((String) properties.get("latitude")));
 		}
 		if (properties.containsKey("longitude")) {
-			setLongitude(new BigDecimal(properties.get("longitude")));
+			setLongitude(new BigDecimal((String) properties.get("longitude")));
 		}
 		if (properties.containsKey("precision")) {
-			setPrecision(new BigDecimal(properties.get("precision")));
+			setPrecision(new BigDecimal((String) properties.get("precision")));
 		}
 	}
 }

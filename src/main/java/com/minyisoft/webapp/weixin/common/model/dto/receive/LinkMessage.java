@@ -16,10 +16,10 @@ public class LinkMessage extends CommonMessage {
 	private String url;
 	
 	@Override
-	protected void fillProperty(Map<String, String> properties) {
+	protected void fillProperty(Map<String, Object> properties) {
 		super.fillProperty(properties);
-		setTitle(properties.get("title"));
-		setDescription(properties.get("description"));
-		setUrl(properties.get("url"));
+		setTitle((String)properties.get("title"));
+		setDescription((String)properties.get("description"));
+		setUrl((String)properties.get("url"));
 	}
 }

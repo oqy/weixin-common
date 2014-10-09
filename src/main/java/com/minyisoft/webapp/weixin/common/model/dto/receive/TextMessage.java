@@ -12,10 +12,10 @@ import lombok.Setter;
 @Setter
 public class TextMessage extends CommonMessage {
 	private String content;
-	
+
 	@Override
-	protected void fillProperty(Map<String, String> properties) {
+	protected void fillProperty(Map<String, Object> properties) {
 		super.fillProperty(properties);
-		setContent(properties.get("content"));
+		setContent((String) properties.get("content"));
 	}
 }

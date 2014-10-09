@@ -13,11 +13,11 @@ import lombok.Setter;
 public class QrsceneMessage extends EventMessage {
 	private String eventKey;
 	private String ticket;
-	
+
 	@Override
-	protected void fillProperty(Map<String, String> properties) {
+	protected void fillProperty(Map<String, Object> properties) {
 		super.fillProperty(properties);
-		setEventKey(properties.get("eventKey"));
-		setTicket(properties.get("ticket"));
+		setEventKey((String) properties.get("eventKey"));
+		setTicket((String) properties.get("ticket"));
 	}
 }
