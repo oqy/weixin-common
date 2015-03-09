@@ -15,7 +15,7 @@ public final class MpConstant {
 
 	static {
 		try {
-			properties.load(MpConstant.class.getResourceAsStream("mp.properties"));
+			properties.load(MpConstant.class.getResourceAsStream("mpConfig.properties"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);
